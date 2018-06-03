@@ -5,9 +5,7 @@ unit winopengl;
 interface
 
 uses
-  Windows,
-  gl, GLext,
-  Classes, SysUtils, gapistattypes;
+  Windows, gl, gapistattypes;
 
 type
 
@@ -52,6 +50,7 @@ var
   cls : TWNDCLASSA;
 begin
   FillChar(cls, sizeof(cls),0);
+  cls.style:=CS_OWNDC; // recommended by Khronos
   cls.hInstance:=HINSTANCE;
   cls.lpfnWndProc:=@WinProc;
   cls.lpszClassName:='GLSTAT';
@@ -76,7 +75,7 @@ begin
   FillChar(d, sizeof(d), 0);
   d.nSize:=sizeof(d);
   d.nVersion:=1;
-  d.dwFlags:=PFD_SUPPORT_OPENGL or PFD_DRAW_TO_WINDOW or PFD_DOUBLEBUFFER or PFD_GENERIC_ACCELERATED;
+  d.dwFlags:=PFD_SUPPORT_OPENGL or PFD_DRAW_TO_WINDOW or PFD_DOUBLEBUFFER;
   d.iPixelType:=PFD_TYPE_RGBA;
   d.cColorBits:=32;
   d.cDepthBits:=24;
