@@ -18,12 +18,16 @@ type
 function DetectVideoCorp(const vendor: string): TVideoCorp;
 var
   n : string;
+  i : integer;
 begin
   n:=lowercase(vendor);
   if pos('nvidia', n)>0 then Result:=vcNvidia
   else if pos('intel',n)>0 then Result:=vcIntel
-  else if pos('ati',n)>0 then Result:=vcAti
-  else Result:=vcOther;
+  else begin
+    i:=pos('ati',n);
+    if (i>0) and ((i+3=length(n)+1) or (n[i+3] in [' ',#9,#13,#10])) then Result:=vcAti
+    else Result:=vcOther;
+  end;
 end;
 
 var
@@ -32,11 +36,11 @@ var
 begin
   gapi:=AllocGapiStat;
   try
-    writeln('Vendor:  ', gapi.Vendor);
     writeln('Card:    ', gapi.VideoCard);
+    writeln('Vendor:  ', gapi.Vendor);
     writeln('Version: ', gapi.GAPIName,' ', gapi.Version);
     writeln;
-    writeln('Card by: ', DetectVideoCorp(gapi.Vendor));
+    writeln('Card is ', DetectVideoCorp(gapi.Vendor));
   finally
     gapi.Free;
   end;
